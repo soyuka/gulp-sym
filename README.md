@@ -1,9 +1,10 @@
 gulp-sym
 ========
 
-> Gulp symlink module
-
 [![Build Status](https://travis-ci.org/soyuka/gulp-sym.svg?branch=master)](https://travis-ci.org/soyuka/gulp-sym)
+[![Dependency Status](https://david-dm.org/soyuka/gulp-sym.svg)](https://david-dm.org/soyuka/gulp-sym)
+
+> Gulp symlink module
 
 # Why?
 
