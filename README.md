@@ -13,7 +13,7 @@ I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink
 # Installation
 
 ```
-npm install gulp-sym --save-dev
+npm install gulp-sym --save-dev {--production}
 ```
 
 # Usage
@@ -39,10 +39,10 @@ var symlink = require('gulp-sym')
 gulp
 	.src(['path/**/to/some/dir/', '!path/example/to/some/dir'])
 	//file is a vinyl instance
-	.pipe(symlink(function(file) {
+	.pipe(symlink(function(source) {
 
 		//for example link is done on my/dest/path/dirname where dirname matches the glob pattern
-		return p.join('my/dest/path', file.relative.split(p.sep)[0])
+		return p.join('my/dest/path', source.relative.split(p.sep)[0])
 
 		// you might also return a vinyl instance if you wanted a different cwd
 		return new File({cwd: '/home', path: './symlink'})
@@ -56,7 +56,7 @@ gulp
 
 Here is a counterexample, `dest` will be a link to `source/path/two` and the first one will not have any symlink!
 
-```
+```javascript
 gulp
 	.src(['source/path/one', 'source/path/two'])
 	.pipe(symlink('dest', {force: true})) //bad shit WILL happen
@@ -66,10 +66,20 @@ gulp
 ### Do this
 
 That's how it should be:
-```
+```javascript
 gulp
 	.src(['source/path/one', 'source/path/two'])
 	.pipe(symlink(['dest/one', 'dest/two']))
 	
+```
+or through a function that'll be called on each source 
+
+```javascript
+gulp
+	.src(['source/path/one', 'source/path/two'])
+	.pipe(symlink(function(source) {
+		return p.resolve(source.path, '../../dest', p.basename(source.path))
+	})
+
 ```
 
