@@ -52,7 +52,7 @@ describe('gulp-symlink', function() {
 			stream.end()
 		} catch(e) {
 			expect(e).not.to.be.null
-			expect(e.message).to.equal('Destination file exists')
+			expect(e.message).to.contain('Destination file exists')
 
 			cb()
 		}
