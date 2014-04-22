@@ -41,10 +41,10 @@ gulp
 	//file is a vinyl instance
 	.pipe(symlink(function(source) {
 
-		//for example link is done on my/dest/path/dirname where dirname matches the glob pattern
+		//for example link source is my/dest/path/dirname where dirname matches the glob pattern
 		return p.join('my/dest/path', source.relative.split(p.sep)[0])
 
-		// you might also return a vinyl instance if you wanted a different cwd
+		//you might also return a vinyl instance if you wanted a different cwd
 		return new File({cwd: '/home', path: './symlink'})
 
 	}, { force: true })) //use force option to replace existant
