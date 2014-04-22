@@ -50,6 +50,8 @@ gulp
 	}, { force: true })) //use force option to replace existant
 ```
 
+### Don't do this
+
 :warning: If you're working on more than 1 source, use a function or an array to specify the destination path so `gulp-sym` doesn't override the previous symlink!
 
 Here is a counterexample, `dest` will be a link to `source/path/two` and the first one will not have any symlink!
@@ -57,9 +59,11 @@ Here is a counterexample, `dest` will be a link to `source/path/two` and the fir
 ```
 gulp
 	.src(['source/path/one', 'source/path/two'])
-	.pipe(symlink('dest', {force: true}))
+	.pipe(symlink('dest', {force: true})) //bad shit WILL happen
 	
 ```
+
+### Do this
 
 That's how it should be:
 ```
