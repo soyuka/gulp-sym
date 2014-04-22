@@ -8,7 +8,7 @@ gulp-sym
 
 # Why?
 
-I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a vinyl instance to the destination function.
+I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a [vinyl](https://github.com/wearefractal/vinyl) instance to the destination function.
 
 # Installation
 
