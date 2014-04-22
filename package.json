@@ -1,16 +1,16 @@
 {
   "name": "gulp-sym",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Gulp symlink",
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec test/index.js"
   },
   "keywords": [
-    "gulpplugin"
+    "gulpplugin", "symlink", "gulp"
   ],
   "author": "soyuka",
-  "license": "GPL",
+  "license": "MIT",
   "dependencies": {
     "mkdirp": "^0.3.5",
     "through2": "^0.4.1",
@@ -20,5 +20,12 @@
   "devDependencies": {
     "chai": "^1.9.1",
     "mocha": "^1.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/soyuka/gulp-sym"
+  },
+  "bugs": {
+    "url": "https://github.com/soyuka/gulp-sym/issues"
   }
 }
