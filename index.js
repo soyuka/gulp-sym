@@ -19,45 +19,52 @@ function gulpSymlink(dest, options) {
     throw new PluginError(PLUGIN_NAME, "Missing destination link")
   }
 
-  // Creating a stream through which each file will pass
-  var stream = through.obj(function(file, enc, callback) {
+  var stream = through.obj(function(source, enc, callback) {
 
     var self = this
 
-    file.path = p.resolve(file.cwd, file.path)
+    //resolving absolute path from source
+    source.path = p.resolve(source.cwd, source.path)
 
-    dest = typeof dest == 'function' ? dest(file) : dest
+    //if dest is a function simply call it
+    dest = typeof dest == 'function' ? dest(source) : dest
 
+    //is the previous result a File instance ?
     dest = dest instanceof File ? dest : new File({path: dest})
 
+    //resolving absolute path from dest
     dest.path = p.resolve(dest.cwd, dest.path)
 
+    //check if the destination path exists
     var exists = fs.existsSync(dest.path)
 
+    //No force option, we can't override! 
     if(exists && !options.force) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'Destination file exists - use force option to replace', dest))
-      this.push(file)
+      this.push(source)
       return callback()
 
     } else {
 
+      //remove destination if force option
       if(exists && options.force === true)
-        rm.sync(dest.path)
+        rm.sync(dest.path) //I'm aware that this is bad \o/
 
+      //create destination directories
       if(!fs.existsSync(p.dirname(dest.path)))
         mkdirp.sync(p.dirname(dest.path))
       
-      file.stat = fs.statSync(file.path)
+      //this is a windows check as specified in http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback
+      source.stat = fs.statSync(source.path)
 
-      //                                windows compatibility
-      fs.symlink(file.path, dest.path, file.stat.isDirectory() ? 'dir' : 'file', function(err) {
+      fs.symlink(source.path, dest.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
 
         if(err)
-          self.emit('error', new PluginError(PLUGIN_NAME, err), file)
+          self.emit('error', new PluginError(PLUGIN_NAME, err), source)
         else
-          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(file.path), '→', gutil.colors.yellow(dest.path))
+          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(source.path), '→', gutil.colors.yellow(dest.path))
 
-        self.push(file) 
+        self.push(source) 
         return callback()
       })
     
@@ -65,9 +72,7 @@ function gulpSymlink(dest, options) {
 
   })
 
-  // returning the file stream
   return stream
 }
 
-// Exporting the plugin main function
 module.exports = gulpSymlink
