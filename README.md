@@ -31,20 +31,19 @@ gulp
 ## Advanced example
 
 ```javascript
-var symlink = require('gulp-sym'), p = require('path')
+var symlink = require('gulp-sym')
+  , p = require('path')
+  , File = require('gulp-util').File
 
-var File = require('gulp-util').File
-
-//Again with some directory use case
 gulp
 	.src(['path/**/to/some/dir/', '!path/example/to/some/dir'])
-	//                     file is a vinyl instance
+	//file is a vinyl instance
 	.pipe(symlink(function(file) {
 
+		//for example link is done on my/dest/path/dirname where dirname matches the glob pattern
 		return p.join('my/dest/path', file.relative.split(p.sep)[0])
 
-		// you might also return a vinyl instance if you wanted the cwd to change for example
-	
+		// you might also return a vinyl instance if you wanted a different cwd
 		return new File({cwd: '/home', path: './symlink'})
 
 	}, { force: true })) //use force option to replace existant
