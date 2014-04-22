@@ -3,14 +3,19 @@ var expect = require('chai').expect
   , p = require('path')
   , gutil = require('gulp-util')
   , symlink = require('../')
-  , file
+  , file, dir
   , rm = require('rimraf')
+  , async = require('async')
 
 describe('gulp-symlink', function() {
 
 	before(function() {
 		file = new gutil.File({
 			path: './test/fixtures/test',
+			base: './test/fixtures/',
+		})
+		dir = new gutil.File({
+			path: './test/fixtures/test_dir',
 			base: './test/fixtures/',
 		})
 	})
@@ -23,7 +28,7 @@ describe('gulp-symlink', function() {
 			expect(newFile).to.equal(file)
         })
 
-		stream.once('end', function () {
+		stream.once('end', function() {
 			
 			fs.readFile(dest, function(err, f) {
 				expect(err).to.be.null
@@ -65,7 +70,7 @@ describe('gulp-symlink', function() {
 
 		stream.on('data', function(newDir){ })
 
-		stream.once('end', function () {
+		stream.once('end', function() {
 			fs.readFile(dest, function(err, f) {
 				expect(err).to.be.null
 				expect(f.toString()).to.equal(fs.readFileSync(file.path).toString())
@@ -93,7 +98,7 @@ describe('gulp-symlink', function() {
 
 		stream.on('data', function(newFile){ })
 
-		stream.once('end', function () {
+		stream.once('end', function() {
 			fs.readFile(dest, function(err, f) {
 				expect(err).to.be.null
 				expect(f.toString()).to.equal(fs.readFileSync(file.path).toString())
@@ -117,14 +122,10 @@ describe('gulp-symlink', function() {
 	it('should symlink a directory', function(cb) {
 		var dest = './test/fixtures/links/test'
           , stream = symlink(dest)
-          , dir = new gutil.File({
-				path: './test/fixtures/test_dir',
-				base: './test/fixtures/',
-			})
 
         stream.on('data', function(newDir){ })
 
-		stream.once('end', function () {
+		stream.once('end', function() {
 			
 			fs.exists(dest, function(exists) {
 				expect(exists).to.be.true
@@ -160,7 +161,7 @@ describe('gulp-symlink', function() {
 			expect(newFile).to.equal(file)
         })
 
-		stream.once('end', function () {
+		stream.once('end', function() {
 			
 			fs.readFile(dest, function(err, f) {
 				expect(err).to.be.null
@@ -179,6 +180,28 @@ describe('gulp-symlink', function() {
 		})
 
 		stream.write(file)
+		stream.end()
+	})
+
+	it('should symlink 2 sources to 2 different destinations', function(cb) {
+
+		var dests = ['./test/fixtures/links/test', './test/fixtures/links/test_dir']
+
+		var stream = symlink(dests)
+
+		stream.on('data', function(data) {
+		})
+
+		stream.on('end', function() {
+
+			for(var j in dests)
+				expect(fs.existsSync(dests[j])).to.be.true
+
+			async.map(dests, rm, cb)
+		})
+
+		stream.write(file)
+		stream.write(dir)
 		stream.end()
 	})
 
