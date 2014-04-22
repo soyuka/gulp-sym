@@ -3,13 +3,17 @@ gulp-sym
 
 > Gulp symlink module
 
+[![Build Status](https://travis-ci.org/soyuka/gulp-sym.svg?branch=master)](https://travis-ci.org/soyuka/gulp-sym)
+
 # Why?
 
-I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, path is always absolute and resolves from the cwd that you might change it by passing a vinyl instance to the destination function.
+I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a vinyl instance to the destination function.
 
 # Installation
 
-`npm install gulp-sym --save-dev`
+```
+npm install gulp-sym --save-dev
+```
 
 # Usage
 
