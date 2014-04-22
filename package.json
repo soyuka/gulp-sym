@@ -9,7 +9,7 @@
   "keywords": [
     "gulpplugin",
     "symlink",
-    "gulp"
+    "gulp-symlink"
   ],
   "author": "soyuka",
   "license": "MIT",
