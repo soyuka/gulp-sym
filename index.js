@@ -55,7 +55,7 @@ function gulpSymlink(dest, options) {
         if(err)
           self.emit('error', new PluginError(PLUGIN_NAME, err), file)
         else
-          gutil.log('Symlink', gutil.colors.magenta(file.path), '->', gutil.colors.magenta(dest.path))
+          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(file.path), '→', gutil.colors.yellow(dest.path))
 
         self.push(file) 
         return callback()
