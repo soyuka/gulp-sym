@@ -19,12 +19,20 @@ function gulpSymlink(dest, options) {
     throw new PluginError(PLUGIN_NAME, "Missing destination link")
   }
 
+  if(dest instanceof Array) {
+    //copy array because we'll shift values
+    var destinations = dest.slice()
+  }
+
   var stream = through.obj(function(source, enc, callback) {
 
     var self = this
 
     //resolving absolute path from source
     source.path = p.resolve(source.cwd, source.path)
+
+    //Array of destinations is passed
+    dest = destinations !== undefined ? destinations.shift() : dest
 
     //if dest is a function simply call it
     dest = typeof dest == 'function' ? dest(source) : dest
