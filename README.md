@@ -1,9 +1,10 @@
 gulp-sym
 ========
 
-> Gulp symlink module
-
 [![Build Status](https://travis-ci.org/soyuka/gulp-sym.svg?branch=master)](https://travis-ci.org/soyuka/gulp-sym)
+[![Dependency Status](https://david-dm.org/soyuka/gulp-sym.svg)](https://david-dm.org/soyuka/gulp-sym)
+
+> Gulp symlink module
 
 # Why?
 
@@ -47,5 +48,28 @@ gulp
 		return new File({cwd: '/home', path: './symlink'})
 
 	}, { force: true })) //use force option to replace existant
+```
+
+### Don't do this
+
+:warning: If you're working on more than 1 source, use a function or an array to specify the destination path so `gulp-sym` doesn't override the previous symlink!
+
+Here is a counterexample, `dest` will be a link to `source/path/two` and the first one will not have any symlink!
+
+```
+gulp
+	.src(['source/path/one', 'source/path/two'])
+	.pipe(symlink('dest', {force: true})) //bad shit WILL happen
+	
+```
+
+### Do this
+
+That's how it should be:
+```
+gulp
+	.src(['source/path/one', 'source/path/two'])
+	.pipe(symlink(['dest/one', 'dest/two']))
+	
 ```
 
