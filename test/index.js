@@ -86,6 +86,34 @@ describe('gulp-symlink', function() {
 
 	})
 
+	it('should symlink through File instance', function(cb) {
+
+		var dest = './test/fixtures/links/test'
+          , stream = symlink(new gutil.File({cwd: process.cwd(), path: dest}))
+
+		stream.on('data', function(newFile){ })
+
+		stream.once('end', function () {
+			fs.readFile(dest, function(err, f) {
+				expect(err).to.be.null
+				expect(f.toString()).to.equal(fs.readFileSync(file.path).toString())
+
+				fs.lstat(dest, function(err, stats) {
+					expect(stats.isSymbolicLink()).to.be.true
+					
+					rm(dest, function() {
+						cb()
+					})
+				})
+
+			})
+		})	
+
+		stream.write(file)
+		stream.end()
+
+	})
+
 	it('should symlink a directory', function(cb) {
 		var dest = './test/fixtures/links/test'
           , stream = symlink(dest)
