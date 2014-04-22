@@ -1,0 +1,24 @@
+{
+  "name": "gulp-sym",
+  "version": "0.0.1",
+  "description": "Gulp symlink",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec test/index.js"
+  },
+  "keywords": [
+    "gulpplugin"
+  ],
+  "author": "soyuka",
+  "license": "GPL",
+  "dependencies": {
+    "mkdirp": "^0.3.5",
+    "through2": "^0.4.1",
+    "rimraf": "^2.2.6",
+    "gulp-util": "^2.2.14"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.18.2"
+  }
+}
