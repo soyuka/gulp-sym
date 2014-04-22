@@ -7,7 +7,7 @@ var through = require('through2')
   , PluginError = gutil.PluginError
   , File = gutil.File
 
-  , PLUGIN_NAME = 'gulp-prefixer'
+  , PLUGIN_NAME = 'gulp-sym'
 
 // Plugin level function(dealing with files)
 function gulpSymlink(dest, options) {
@@ -49,7 +49,7 @@ function gulpSymlink(dest, options) {
       
       file.stat = fs.statSync(file.path)
 
-      //                          windows compat
+      //                                windows compatibility
       fs.symlink(file.path, dest.path, file.stat.isDirectory() ? 'dir' : 'file', function(err) {
 
         if(err)
