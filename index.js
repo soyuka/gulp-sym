@@ -35,7 +35,7 @@ function gulpSymlink(dest, options) {
     var exists = fs.existsSync(dest.path)
 
     if(exists && !options.force) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'Destination file exists', dest))
+      this.emit('error', new PluginError(PLUGIN_NAME, 'Destination file exists - use force option to replace', dest))
       this.push(file)
       return callback()
 
