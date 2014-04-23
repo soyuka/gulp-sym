@@ -10,6 +10,7 @@ var expect = require('chai').expect
 describe('gulp-symlink', function() {
 
 	before(function() {
+
 		file = new gutil.File({
 			path: './test/fixtures/test',
 			base: './test/fixtures/',
@@ -18,6 +19,16 @@ describe('gulp-symlink', function() {
 			path: './test/fixtures/test_dir',
 			base: './test/fixtures/',
 		})
+	})
+
+	it('should throw with no destination symlink', function(cb) {
+		try {
+			var stream = symlink()
+		} catch(e) {
+			expect(e).not.to.be.null
+			expect(e.message).to.contain('Missing destination link')
+			cb()
+		}
 	})
 
 	it('should symlink file', function(cb) {
@@ -47,20 +58,27 @@ describe('gulp-symlink', function() {
 		stream.end()
 	})
 
-	it('should throw because symlink exists', function(cb) {
+	it('should emit error because symlink exists', function(cb) {
 		var dest = './test/fixtures/links/test'
 
-		try {
-			var stream = symlink(dest)
+		var stream = symlink(dest)
 
-			stream.write(file)
-			stream.end()
-		} catch(e) {
+		stream.on('data', function(newFile){ 
+			expect(newFile).to.equal(file)
+		})
+		
+		stream.once('end', function() {
+			cb()
+		})
+
+		stream.on('error', function(e) {
 			expect(e).not.to.be.null
 			expect(e.message).to.contain('Destination file exists')
+		})
 
-			cb()
-		}
+		stream.write(file)
+		stream.end()
+
 	})
 
 	it('should overwrite symlink', function(cb) {
@@ -231,6 +249,33 @@ describe('gulp-symlink', function() {
 		stream.write(file)
 		stream.write(dir)
 		stream.end()
+	})
+
+	//Do we really want 100% coverage?
+
+	it('should emit an error on symlink creation', function(cb) {
+
+		fs.mkdirSync('./test/fixtures/badlinks', 600)
+
+		var dest = './test/fixtures/badlinks/test'
+          , stream = symlink(dest)
+
+        stream.on('data', function(newDir){ })
+
+		stream.once('end', function() {
+			rm.sync('./test/fixtures/badlinks')
+		})
+
+		stream.on('error', function(e) {
+			expect(e).not.to.be.null
+			expect(e.message).to.contain('EACCES')
+			cb()
+
+		})
+
+		stream.write(dir)
+		stream.end()
+
 	})
 
 })
