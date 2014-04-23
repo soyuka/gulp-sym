@@ -16,7 +16,7 @@ function gulpSymlink(dest, options) {
   options.force = options.force === undefined ? false : options.force
 
   if (!dest) {
-    throw new PluginError(PLUGIN_NAME, "Missing destination link")
+    throw new PluginError({plugin: PLUGIN_NAME, message: "Missing destination link"})
   }
 
   if(dest instanceof Array) {
@@ -26,29 +26,29 @@ function gulpSymlink(dest, options) {
 
   var stream = through.obj(function(source, enc, callback) {
 
-    var self = this
+    var self = this, symlink
 
     //resolving absolute path from source
     source.path = p.resolve(source.cwd, source.path)
 
     //Array of destinations is passed
-    dest = destinations !== undefined ? destinations.shift() : dest
+    symlink = destinations !== undefined ? destinations.shift() : dest
 
     //if dest is a function simply call it
-    dest = typeof dest == 'function' ? dest(source) : dest
+    symlink = typeof dest == 'function' ? dest(source) : symlink
 
     //is the previous result a File instance ?
-    dest = dest instanceof File ? dest : new File({path: dest})
+    symlink = symlink instanceof File ? symlink : new File({path: symlink})
 
     //resolving absolute path from dest
-    dest.path = p.resolve(dest.cwd, dest.path)
+    symlink.path = p.resolve(symlink.cwd, symlink.path)
 
     //check if the destination path exists
-    var exists = fs.existsSync(dest.path)
+    var exists = fs.existsSync(symlink.path)
 
     //No force option, we can't override! 
     if(exists && !options.force) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'Destination file exists - use force option to replace', dest))
+      this.emit('error', new PluginError({plugin: PLUGIN_NAME, message: 'Destination file exists ('+dest+') - use force option to replace'}))
       this.push(source)
       return callback()
 
@@ -56,21 +56,21 @@ function gulpSymlink(dest, options) {
 
       //remove destination if force option
       if(exists && options.force === true)
-        rm.sync(dest.path) //I'm aware that this is bad \o/
+        rm.sync(symlink.path) //I'm aware that this is bad \o/
 
       //create destination directories
-      if(!fs.existsSync(p.dirname(dest.path)))
-        mkdirp.sync(p.dirname(dest.path))
+      if(!fs.existsSync(p.dirname(symlink.path)))
+        mkdirp.sync(p.dirname(symlink.path))
       
       //this is a windows check as specified in http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback
       source.stat = fs.statSync(source.path)
 
-      fs.symlink(source.path, dest.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
+      fs.symlink(source.path, symlink.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
 
         if(err)
-          self.emit('error', new PluginError(PLUGIN_NAME, err), source)
+          self.emit('error', new PluginError({plugin: PLUGIN_NAME, message: err}))
         else
-          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(source.path), '→', gutil.colors.yellow(dest.path))
+          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(source.path), '→', gutil.colors.yellow(symlink.path))
 
         self.push(source) 
         return callback()
