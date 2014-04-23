@@ -22,6 +22,7 @@ var symlink = require('gulp-sym')
 gulp
 	.src('source')
 	.pipe(symlink('path/to/link'))
+	//note that it'll return source streams not the symlink ones
 
 ```
 
