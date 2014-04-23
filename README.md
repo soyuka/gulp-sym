@@ -6,10 +6,6 @@ gulp-sym
 
 > Gulp symlink module
 
-# Why?
-
-I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a [vinyl](https://github.com/wearefractal/vinyl) instance to the destination function.
-
 # Installation
 
 ```
@@ -50,9 +46,9 @@ gulp
 	}, { force: true })) //use force option to replace existant
 ```
 
-### Don't do this
+### /!\ Don't do this ...
 
-:warning: If you're working on more than 1 source, use a function or an array to specify the destination path so `gulp-sym` doesn't override the previous symlink!
+If you're working on more than 1 source, use a function or an array to specify the destination path so `gulp-sym` doesn't override the previous symlink!
 
 Here is a counterexample, `dest` will be a link to `source/path/two` and the first one will not have any symlink!
 
@@ -63,7 +59,7 @@ gulp
 	
 ```
 
-### Do this
+### ... but this
 
 That's how it should be:
 ```javascript
@@ -83,3 +79,8 @@ gulp
 
 ```
 
+It's intendend behavior and api will not change for this, I could warn the user in this case - to be discussed.
+
+# Why?
+
+I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a [vinyl](https://github.com/wearefractal/vinyl) instance to the destination function.
