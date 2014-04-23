@@ -5,6 +5,7 @@ gulp-sym
 [![Dependency Status](https://david-dm.org/soyuka/gulp-sym.svg)](https://david-dm.org/soyuka/gulp-sym)
 [![NPM version](https://badge.fury.io/js/gulp-sym.svg)](http://badge.fury.io/js/gulp-sym)
 [![Code Climate](https://codeclimate.com/github/soyuka/gulp-sym.png)](https://codeclimate.com/github/soyuka/gulp-sym)
+[![Coverage](https://codeclimate.com/github/soyuka/gulp-sym/coverage.png)](https://codeclimate.com/github/soyuka/gulp-sym)
 
 > Gulp symlink module
 
