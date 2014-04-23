@@ -3,6 +3,7 @@ gulp-sym
 
 [![Build Status](https://travis-ci.org/soyuka/gulp-sym.svg?branch=master)](https://travis-ci.org/soyuka/gulp-sym)
 [![Dependency Status](https://david-dm.org/soyuka/gulp-sym.svg)](https://david-dm.org/soyuka/gulp-sym)
+[![NPM version](https://badge.fury.io/js/gulp-sym.svg)](http://badge.fury.io/js/gulp-sym)
 
 > Gulp symlink module
 
@@ -85,6 +86,13 @@ It's intendend behavior and api will not change for this, I could warn the user 
 # Why?
 
 I'm aware that there is another [symlink](https://github.com/ben-eb/gulp-symlink) module for gulp but as of v0.1.0 it didn't fit my needs and seems to get messy (absolute/relative). In this plugin, `paths` are always absolute and resolves from the `cwd` that you might change by passing a [vinyl](https://github.com/wearefractal/vinyl) instance to the destination function.
+
+[gulp-symlink](https://github.com/ben-eb/gulp-symlink) :
+- has no force option to replace existing link
+- uses [fs.symlink twice](https://github.com/ben-eb/gulp-symlink/blob/master/index.js#L54) instead of using `fs.exists`. I'm aware of the nodejs docs specifying that `fs.exists` is there on an historical purpose only but why shouldn't we use it?
+- doesn't use the specified type option mentioned in the [nodejs docs](http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback) (windows only)
+- has no test on symlinking directories (maybe why tests are good to go on windows)
+- has bad support on multiple sources (at the moment)
 
 # Licence
 
