@@ -183,7 +183,7 @@ describe('gulp-symlink', function() {
 		stream.end()
 	})
 
-	it('should symlink 2 sources to 2 different destinations', function(cb) {
+	it('should symlink 2 sources to 2 different destinations [array]', function(cb) {
 
 		var dests = ['./test/fixtures/links/test', './test/fixtures/links/test_dir']
 
@@ -196,6 +196,34 @@ describe('gulp-symlink', function() {
 
 			for(var j in dests)
 				expect(fs.existsSync(dests[j])).to.be.true
+
+			async.map(dests, rm, cb)
+		})
+
+		stream.write(file)
+		stream.write(dir)
+		stream.end()
+	})
+
+
+	it('should symlink 2 sources to 2 different destinations [function]', function(cb) {
+
+		var dests = ['./test/fixtures/links/test', './test/fixtures/links/test_dir']
+		var i = 0
+		var stream = symlink(function(source) {
+			i++ //make sure this is called 2 times
+			return p.resolve(source.path, '../../fixtures/links', p.basename(source.path))
+		})
+
+		stream.on('data', function(data) {
+		})
+
+		stream.on('end', function() {
+
+			for(var j in dests)
+				expect(fs.existsSync(dests[j])).to.be.true
+
+			expect(i).to.equal(2)
 
 			async.map(dests, rm, cb)
 		})
