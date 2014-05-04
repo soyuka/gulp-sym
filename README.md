@@ -38,7 +38,7 @@ var symlink = require('gulp-sym')
 
 gulp
 	.src(['path/**/to/some/dir/', '!path/example/to/some/dir'])
-	//file is a vinyl instance
+	//source is a vinyl instance
 	.pipe(symlink(function(source) {
 
 		//for example link source is my/dest/path/dirname where dirname matches the glob pattern
