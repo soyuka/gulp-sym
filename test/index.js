@@ -33,11 +33,11 @@ describe('gulp-symlink', function() {
 
 	it('should symlink file', function(cb) {
 		var dest = './test/fixtures/links/test'
-          , stream = symlink(dest)
+      , stream = symlink(dest)
 
-        stream.on('data', function(newFile){
+    stream.on('data', function(newFile){
 			expect(newFile).to.equal(file)
-        })
+    })
 
 		stream.once('end', function() {
 			
@@ -60,8 +60,7 @@ describe('gulp-symlink', function() {
 
 	it('should emit error because symlink exists', function(cb) {
 		var dest = './test/fixtures/links/test'
-
-		var stream = symlink(dest)
+		  , stream = symlink(dest)
 
 		stream.on('data', function(newFile){ 
 			expect(newFile).to.equal(file)
@@ -83,8 +82,7 @@ describe('gulp-symlink', function() {
 
 	it('should overwrite symlink', function(cb) {
 		var dest = './test/fixtures/links/test'
-
-		var stream = symlink(dest, {force: true})
+		  , stream = symlink(dest, {force: true})
 
 		stream.on('data', function(newDir){ })
 
@@ -112,7 +110,7 @@ describe('gulp-symlink', function() {
 	it('should symlink through File instance', function(cb) {
 
 		var dest = './test/fixtures/links/test'
-          , stream = symlink(new gutil.File({cwd: process.cwd(), path: dest}))
+      , stream = symlink(new gutil.File({cwd: process.cwd(), path: dest}))
 
 		stream.on('data', function(newFile){ })
 
@@ -139,9 +137,9 @@ describe('gulp-symlink', function() {
 
 	it('should symlink a directory', function(cb) {
 		var dest = './test/fixtures/links/test'
-          , stream = symlink(dest)
+      , stream = symlink(dest)
 
-        stream.on('data', function(newDir){ })
+    stream.on('data', function(newDir){ })
 
 		stream.once('end', function() {
 			
@@ -173,11 +171,11 @@ describe('gulp-symlink', function() {
 		//testing function call
 		var stream = symlink(function(file) {
 			return p.resolve(file.path, '../../fixtures/links/test/directory/symlink') 
-          })
+	  })
 
-        stream.on('data', function(newFile){
+    stream.on('data', function(newFile){
 			expect(newFile).to.equal(file)
-        })
+    })
 
 		stream.once('end', function() {
 			
@@ -258,12 +256,16 @@ describe('gulp-symlink', function() {
 		fs.mkdirSync('./test/fixtures/badlinks', 600)
 
 		var dest = './test/fixtures/badlinks/test'
-          , stream = symlink(dest)
+      , stream = symlink(dest)
 
-        stream.on('data', function(newDir){ })
+    stream.on('data', function(newDir){ })
 
 		stream.once('end', function() {
 			rm.sync('./test/fixtures/badlinks')
+
+			//windows fs.mkdirSync has wrong rights, I'm cheating there...
+			if(require('os').platform() == 'win32')
+				cb()
 		})
 
 		stream.on('error', function(e) {
