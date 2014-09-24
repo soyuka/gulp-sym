@@ -51,6 +51,11 @@ gulp
 	}, { force: true })) //use force option to replace existant
 ```
 
+## Options
+
+- `force` (bool): force overwrite symlink
+- `relative` (bool): your link will be relative
+
 ### /!\ Don't do this ...
 
 If you're working on more than 1 source, use a function or an array to specify the destination path so `gulp-sym` doesn't override the previous symlink!
