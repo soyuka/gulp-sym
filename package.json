@@ -1,6 +1,6 @@
 {
   "name": "gulp-sym",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Gulp symlink",
   "main": "index.js",
   "scripts": {
