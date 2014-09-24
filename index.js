@@ -30,6 +30,7 @@ function gulpSymlink(dest, options) {
 
     //resolving absolute path from source
     source.path = p.resolve(source.cwd, source.path)
+    // source.relative = p.relative(source.cwd, source.path)
 
     //Array of destinations is passed
     symlink = destinations !== undefined ? destinations.shift() : dest
@@ -42,6 +43,9 @@ function gulpSymlink(dest, options) {
 
     //resolving absolute path from dest
     symlink.path = p.resolve(symlink.cwd, symlink.path)
+
+    //relative path between source and link
+    var relative_symlink_source = p.relative(p.dirname(symlink.path), source.path)
 
     //check if the destination path exists
     var exists = fs.existsSync(symlink.path)
@@ -65,12 +69,12 @@ function gulpSymlink(dest, options) {
       //this is a windows check as specified in http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback
       source.stat = fs.statSync(source.path)
 
-      fs.symlink(source.path, symlink.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
+      fs.symlink(options.relative ? relative_symlink_source : source.path, symlink.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
 
         if(err)
           self.emit('error', new PluginError({plugin: PLUGIN_NAME, message: err}))
         else
-          gutil.log(PLUGIN_NAME + ':', gutil.colors.gray(source.path), '→', gutil.colors.yellow(symlink.path))
+          gutil.log(PLUGIN_NAME + ':', gutil.colors.blue(options.relative ? relative_symlink_source : source.path), '→', gutil.colors.yellow(symlink.path))
 
         self.push(source) 
         return callback()
