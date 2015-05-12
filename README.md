@@ -10,6 +10,9 @@ gulp-sym
 
 > Gulp symlink module
 
+# Deprecation warning
+In favor of https://github.com/ben-eb/gulp-symlink See https://github.com/ben-eb/gulp-symlink/issues/15
+
 # Installation
 
 ```
