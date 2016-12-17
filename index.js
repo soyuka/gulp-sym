@@ -1,13 +1,14 @@
-var through = require('through2')
-  , fs = require('fs')
-  , p = require('path')
-  , rm = require('rimraf')
-  , mkdirp = require('mkdirp')
-  , gutil = require('gulp-util')
-  , PluginError = gutil.PluginError
-  , File = gutil.File
-
-  , PLUGIN_NAME = 'gulp-sym'
+'use strict'
+const through = require('through2')
+const fs = require('fs')
+const p = require('path')
+const rm = require('rimraf')
+const mkdirp = require('mkdirp')
+const gutil = require('gulp-util')
+const PluginError = gutil.PluginError
+const File = gutil.File
+const existsSync = require('@soyuka/exists-sync')
+const PLUGIN_NAME = 'gulp-sym'
 
 // Plugin level function(dealing with files)
 function gulpSymlink(dest, options) {
@@ -48,40 +49,37 @@ function gulpSymlink(dest, options) {
     var relative_symlink_source = p.relative(p.dirname(symlink.path), source.path)
 
     //check if the destination path exists
-    var exists = fs.existsSync(symlink.path)
+    var exists = existsSync(symlink.path)
 
-    //No force option, we can't override! 
+    //No force option, we can't override!
     if(exists && !options.force) {
       this.emit('error', new PluginError({plugin: PLUGIN_NAME, message: 'Destination file exists ('+dest+') - use force option to replace'}))
       this.push(source)
       return callback()
 
-    } else {
+    }
 
-      //remove destination if force option
-      if(exists && options.force === true)
-        rm.sync(symlink.path) //I'm aware that this is bad \o/
+    //remove destination if force option
+    if(exists && options.force === true)
+      rm.sync(symlink.path) //I'm aware that this is bad \o/
 
-      //create destination directories
-      if(!fs.existsSync(p.dirname(symlink.path)))
-        mkdirp.sync(p.dirname(symlink.path))
-      
-      //this is a windows check as specified in http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback
-      source.stat = fs.statSync(source.path)
+    //create destination directories
+    if(!fs.existsSync(p.dirname(symlink.path)))
+      mkdirp.sync(p.dirname(symlink.path))
 
-      fs.symlink(options.relative ? relative_symlink_source : source.path, symlink.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
+    //this is a windows check as specified in http://nodejs.org/api/fs.html#fs_fs_symlink_srcpath_dstpath_type_callback
+    source.stat = fs.statSync(source.path)
 
-        if(err)
-          self.emit('error', new PluginError({plugin: PLUGIN_NAME, message: err}))
-        else
-          gutil.log(PLUGIN_NAME + ':', gutil.colors.blue(options.relative ? relative_symlink_source : source.path), '→', gutil.colors.yellow(symlink.path))
+    fs.symlink(options.relative ? relative_symlink_source : source.path, symlink.path, source.stat.isDirectory() ? 'dir' : 'file', function(err) {
 
-        self.push(source) 
-        return callback()
-      })
-    
-    }    
+      if(err)
+        self.emit('error', new PluginError({plugin: PLUGIN_NAME, message: err}))
+      else
+        gutil.log(PLUGIN_NAME + ':', gutil.colors.yellow(symlink.path), '→', gutil.colors.blue(options.relative ? relative_symlink_source : source.path))
 
+      self.push(source)
+      callback()
+    })
   })
 
   return stream
