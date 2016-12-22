@@ -14,10 +14,11 @@
   "author": "soyuka",
   "license": "MIT",
   "dependencies": {
+    "@soyuka/exists-sync": "^1.0.1",
+    "gulp-util": "^3.0.7",
     "mkdirp": "^0.5.1",
-    "through2": "^2.0.3",
     "rimraf": "^2.5.4",
-    "gulp-util": "^3.0.7"
+    "through2": "^2.0.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
